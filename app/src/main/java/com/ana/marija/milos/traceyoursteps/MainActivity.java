@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(className, "Settting text");
 
         zdravo.setText("Zdravo svete");
+        zdravo.setText("Promena");
+        zdravo.setText("Promena");
 
     }
 }
