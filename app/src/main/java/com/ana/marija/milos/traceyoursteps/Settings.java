@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.CheckBox;
 
-/**
- * Created by Milos on 24.5.2017.
- */
 
 public class Settings {
     private static String CLASS_NAME;
@@ -23,11 +20,6 @@ public class Settings {
         CLASS_NAME = getClass().getName();
     }
 
-    /**
-     * Return the saved vibrate setting
-     *
-     * @return true if vibrate is on, false if it is not
-     */
     public boolean isVibrateOn(Activity activity) {
         Log.d(CLASS_NAME, "isVibrateOn");
 
@@ -56,46 +48,7 @@ public class Settings {
         vibrateOn = vibrate;
     }
 
-    /**
-     * Return the stay awake setting
-     *
-     * @return true if stay awake is on, false if it is not
-     */
-    public Boolean isCaffeinated(Activity activity) {
-        Log.d(CLASS_NAME, "isCaffeinated");
 
-        SharedPreferences preferences = activity
-                .getPreferences(Activity.MODE_PRIVATE);
-
-        if (preferences.contains(STAYAWAKE)) {
-            stayAwake = preferences.getBoolean(STAYAWAKE, false);
-        }
-
-        Log.i(CLASS_NAME, "Stay awake is " + stayAwake);
-
-        return stayAwake;
-    }
-
-    /**
-     * Set the stay awake setting
-     *
-     * @param activity
-     * activity to get preferences from
-     * @param stayawake
-     * true to stay awake on, false to work as normal.
-     */
-    public void setCaffeinated(Activity activity, boolean stayawake) {
-        Log.d(CLASS_NAME, "setCaffeinated");
-
-        Log.i(CLASS_NAME, "Setting stay awake to " + stayawake);
-
-        stayAwake = stayawake;
-
-        SharedPreferences preferences = activity
-                .getPreferences(Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(STAYAWAKE, stayAwake);
-        editor.apply(); // rather than commit()
-    }
 
 }
+

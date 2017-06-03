@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TimerActivity extends AppCompatActivity {
+public class TimerActivity extends Activity {
 
     public static String CLASS_NAME;
     public static final long UPDATE_EVERY = 200;
@@ -44,8 +44,6 @@ public class TimerActivity extends AppCompatActivity {
         /*
         strict mode, sta god
         */
-
-        // Make sure we do nothing naughty!
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectAll().penaltyLog().build());
@@ -59,6 +57,12 @@ public class TimerActivity extends AppCompatActivity {
         counter = (TextView) findViewById(R.id.timer);
         start = (Button) findViewById(R.id.start_button);
         stop = (Button) findViewById(R.id.stop_button);
+        //vibrator
+        vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        if (vibrate == null) {
+            Log.w(CLASS_NAME, "No vibration service exists.");
+        }
 
         timerRunning = false;
         startedAt = System.currentTimeMillis();
@@ -71,15 +75,10 @@ public class TimerActivity extends AppCompatActivity {
 
         super.onStart();
         Log.d(CLASS_NAME, "onStart");
-        if(timerRunning){
+        if (timerRunning) {
             handler = new Handler();
             updateTimer = new UpdateTimer(this);
             handler.postDelayed(updateTimer, UPDATE_EVERY);
-        }
-
-        vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        if(vibrate==null){
-            Log.w(CLASS_NAME, "No vibration service exists");
         }
     }
 
@@ -93,6 +92,7 @@ public class TimerActivity extends AppCompatActivity {
     protected void onResume() {
         Log.d(CLASS_NAME, "onResume");
         super.onResume();
+
         enabledButtons();
         setTimeDisplay();
     }
@@ -102,9 +102,11 @@ public class TimerActivity extends AppCompatActivity {
         Log.d(CLASS_NAME, "onStop");
         super.onStop();
 
-        if(timerRunning){
+        Settings settings = ((TraceYourSteps) getApplication()).getSettings();
+
+        if (timerRunning) {
             handler.removeCallbacks(updateTimer);
-            updateTimer=null;
+            updateTimer = null;
             handler = null;
         }
     }
@@ -121,6 +123,70 @@ public class TimerActivity extends AppCompatActivity {
         super.onRestart();
     }
 
+    class UpdateTimer implements Runnable {
+
+        Activity activity;
+
+        public UpdateTimer(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void run() {
+            // Log.d(CLASS_NAME, "run");
+            Settings settings = ((TraceYourSteps) getApplication()).getSettings();
+
+            setTimeDisplay();
+
+//            if (timerRunning && settings.isVibrateOn(activity)) {
+//                vibrateCheck();
+//            }
+
+            if (handler != null) {
+                handler.postDelayed(this, UPDATE_EVERY);
+            }
+
+            // stayAwakeOrNot();
+        }
+
+        protected void vibrateCheck() {
+            long timeNow = System.currentTimeMillis();
+            long diff = timeNow - startedAt;
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
+
+            Log.d(CLASS_NAME, "vibrateCheck");
+
+            seconds = seconds % 60;
+            minutes = minutes % 60;
+
+            if (vibrate != null && seconds == 0 && seconds != lastSeconds) {
+                long[] once = {0, 100};
+                long[] twice = {0, 100, 400, 100};
+                long[] thrice = {0, 100, 400, 100, 400, 100};
+
+                //svaki sat
+                if (minutes == 0) {
+                    Log.i(CLASS_NAME, "Vibrate 3 times");
+                    vibrate.vibrate(thrice, -1);
+                }
+                // svakih 15 min
+                else if (minutes % 15 == 0) {
+                    Log.i(CLASS_NAME, "Vibrate 2 time");
+                    vibrate.vibrate(twice, -1);
+                }
+                // svakih 5 minuta
+                else if (minutes % 5 == 0) {
+                    Log.i(CLASS_NAME, "Vibrate once");
+                    vibrate.vibrate(once, -1);
+                }
+            }
+
+            lastSeconds = seconds;
+        }
+    }
+
+
     public void clickedStart(View view) {
         Log.d(CLASS_NAME, "Kliknuto je dugme start");
 
@@ -130,7 +196,6 @@ public class TimerActivity extends AppCompatActivity {
         enabledButtons();
 
         handler = new Handler();
-        //updateTimer = new UpdateTimer(this);
         updateTimer = new UpdateTimer(this);
         handler.postDelayed(updateTimer, UPDATE_EVERY);
     }
@@ -144,11 +209,12 @@ public class TimerActivity extends AppCompatActivity {
 
         enabledButtons();
         handler.removeCallbacks(updateTimer);
+        updateTimer = null;
         handler = null;
 
     }
 
-    public void clickedSettings(View view){
+    public void clickedSettings(View view) {
         Log.d(CLASS_NAME, "kliknuto na settings");
 
         Log.d(CLASS_NAME, "clickedSettings");
@@ -204,44 +270,4 @@ public class TimerActivity extends AppCompatActivity {
         counter.setText(display);
     }
 
-    protected void vibrateCheck() {
-        long timeNow = System.currentTimeMillis();
-        long diff = timeNow - startedAt;
-        long seconds = diff / 1000;
-        long minutes = seconds / 60;
-
-        Log.d(CLASS_NAME, "vibrateCheck");
-
-        seconds = seconds % 60;
-        minutes = minutes % 60;
-
-        // NOTE done this way to avoid Array/ArrayList issues
-        // NOTE hasVibrator() only on API 11+
-        // NOTE very easy to get manifest wrong!
-        // NOTE seconds != lastSeconds so it dosn't vibrate
-        // multiple times a second
-        if (vibrate != null && seconds == 0 && seconds != lastSeconds) {
-            long[] once = { 0, 100 };
-            long[] twice = { 0, 100, 400, 100 };
-            long[] thrice = { 0, 100, 400, 100, 400, 100 };
-
-            // every hour
-            if (minutes == 0) {
-                Log.i(CLASS_NAME, "Vibrate 3 times");
-                vibrate.vibrate(thrice, -1);
-            }
-            // every 15 minutes
-            else if (minutes % 15 == 0) {
-                Log.i(CLASS_NAME, "Vibrate 2 time");
-                vibrate.vibrate(twice, -1);
-            }
-            // every 5 minutes
-            else if (minutes % 5 == 0) {
-                Log.i(CLASS_NAME, "Vibrate once");
-                vibrate.vibrate(once, -1);
-            }
-        }
-
-        lastSeconds = seconds;
-    }
 }
