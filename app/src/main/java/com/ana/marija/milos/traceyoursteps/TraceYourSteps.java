@@ -2,12 +2,14 @@ package com.ana.marija.milos.traceyoursteps;
 
 import android.app.Application;
 
+import com.ana.marija.milos.traceyoursteps.model.Settings;
+
 /**
  * Created by Milos on 24.5.2017.
  */
 
 public class TraceYourSteps extends Application {
-    protected  Settings settings;
+    protected Settings settings;
 
     public Settings getSettings() {
         if(settings==null){

@@ -1,4 +1,4 @@
-package com.ana.marija.milos.traceyoursteps;
+package com.ana.marija.milos.traceyoursteps.model;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

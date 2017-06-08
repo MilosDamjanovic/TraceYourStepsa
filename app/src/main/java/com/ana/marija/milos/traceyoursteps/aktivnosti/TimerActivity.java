@@ -1,17 +1,21 @@
-package com.ana.marija.milos.traceyoursteps;
+package com.ana.marija.milos.traceyoursteps.aktivnosti;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.ana.marija.milos.traceyoursteps.BuildConfig;
+import com.ana.marija.milos.traceyoursteps.R;
+import com.ana.marija.milos.traceyoursteps.model.Settings;
+import com.ana.marija.milos.traceyoursteps.TraceYourSteps;
+import com.ana.marija.milos.traceyoursteps.model.TimerState;
 
 public class TimerActivity extends Activity {
 
@@ -21,20 +25,22 @@ public class TimerActivity extends Activity {
     protected TextView counter;
     protected Button start;
     protected Button stop;
-    protected long startedAt;
-    protected long lastStopped;
+  //  protected long startedAt;
+   // protected long lastStopped;
     protected long lastSeconds;
 
     protected Handler handler;
     protected UpdateTimer updateTimer;
 
 
-    protected boolean timerRunning;
+   // protected boolean timerRunning;
     protected Vibrator vibrate;
-
+    private TimerState timer;
 
     public TimerActivity() {
+
         CLASS_NAME = getClass().getName();
+        timer= new TimerState();
     }
 
     @Override
@@ -64,10 +70,6 @@ public class TimerActivity extends Activity {
             Log.w(CLASS_NAME, "No vibration service exists.");
         }
 
-        timerRunning = false;
-        startedAt = System.currentTimeMillis();
-        lastStopped = 0;
-
     }
 
     @Override
@@ -75,7 +77,7 @@ public class TimerActivity extends Activity {
 
         super.onStart();
         Log.d(CLASS_NAME, "onStart");
-        if (timerRunning) {
+        if (timer.isRunning()) {
             handler = new Handler();
             updateTimer = new UpdateTimer(this);
             handler.postDelayed(updateTimer, UPDATE_EVERY);
@@ -94,7 +96,7 @@ public class TimerActivity extends Activity {
         super.onResume();
 
         enabledButtons();
-        setTimeDisplay();
+        counter.setText(timer.display());
     }
 
     @Override
@@ -104,7 +106,7 @@ public class TimerActivity extends Activity {
 
         Settings settings = ((TraceYourSteps) getApplication()).getSettings();
 
-        if (timerRunning) {
+        if (timer.isRunning()) {
             handler.removeCallbacks(updateTimer);
             updateTimer = null;
             handler = null;
@@ -136,7 +138,7 @@ public class TimerActivity extends Activity {
             // Log.d(CLASS_NAME, "run");
             Settings settings = ((TraceYourSteps) getApplication()).getSettings();
 
-            setTimeDisplay();
+            counter.setText(timer.display());
 
 //            if (timerRunning && settings.isVibrateOn(activity)) {
 //                vibrateCheck();
@@ -151,7 +153,7 @@ public class TimerActivity extends Activity {
 
         protected void vibrateCheck() {
             long timeNow = System.currentTimeMillis();
-            long diff = timeNow - startedAt;
+            long diff = timer.elapsedTime();
             long seconds = diff / 1000;
             long minutes = seconds / 60;
 
@@ -189,9 +191,8 @@ public class TimerActivity extends Activity {
 
     public void clickedStart(View view) {
         Log.d(CLASS_NAME, "Kliknuto je dugme start");
-
-        timerRunning = true;
-        startedAt = System.currentTimeMillis();
+     //   counter.setText(timer.display());
+        timer.start();
 
         enabledButtons();
 
@@ -202,10 +203,9 @@ public class TimerActivity extends Activity {
 
     public void clickedStop(View view) {
         Log.d(CLASS_NAME, "Kliknuto je dugme stop");
-        timerRunning = false;
+        timer.stop();
 
-        lastStopped = System.currentTimeMillis();
-        setTimeDisplay();
+        counter.setText(timer.display());
 
         enabledButtons();
         handler.removeCallbacks(updateTimer);
@@ -228,46 +228,10 @@ public class TimerActivity extends Activity {
 
     protected void enabledButtons() {
         Log.d(CLASS_NAME, "Set buttons enabled, disabled");
-        start.setEnabled(!timerRunning);
-        stop.setEnabled(timerRunning);
+        start.setEnabled(!timer.isRunning());
+        stop.setEnabled(timer.isRunning());
     }
 
-    protected void setTimeDisplay() {
-        String display;
-        long timeNow;
-        long diff;
-        long seconds;
-        long minutes;
-        long hours;
 
-        Log.d(CLASS_NAME, "setTimeDisplay");
-
-        if (timerRunning) {
-            timeNow = System.currentTimeMillis();
-        } else {
-            timeNow = lastStopped;
-        }
-
-        diff = timeNow - startedAt;
-
-        // no negative time
-        if (diff < 0) {
-            diff = 0;
-        }
-
-        seconds = diff / 1000;
-        minutes = seconds / 60;
-        hours = minutes / 60;
-        seconds = seconds % 60;
-        minutes = minutes % 60;
-
-        display = String.format("%d", hours) + ":"
-                + String.format("%02d", minutes) + ":"
-                + String.format("%02d", seconds);
-
-        Log.i(CLASS_NAME, "Time is " + display);
-
-        counter.setText(display);
-    }
 
 }

@@ -1,8 +1,12 @@
-package com.ana.marija.milos.traceyoursteps;
+package com.ana.marija.milos.traceyoursteps.aktivnosti;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.CheckBox;
+
+import com.ana.marija.milos.traceyoursteps.R;
+import com.ana.marija.milos.traceyoursteps.model.Settings;
+import com.ana.marija.milos.traceyoursteps.TraceYourSteps;
 
 public class SettingsActivity extends Activity {
 

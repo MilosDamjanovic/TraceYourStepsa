@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ana.marija.milos.traceyoursteps.SettingsActivity">
+    tools:context="com.ana.marija.milos.traceyoursteps.aktivnosti.SettingsActivity">
 
     <CheckBox
         android:id="@+id/vibrate_checkbox"
