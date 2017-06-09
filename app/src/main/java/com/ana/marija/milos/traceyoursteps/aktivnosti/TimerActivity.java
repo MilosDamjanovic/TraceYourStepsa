@@ -7,12 +7,15 @@ import android.os.StrictMode;
 import android.os.Vibrator;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.ana.marija.milos.traceyoursteps.BuildConfig;
 import com.ana.marija.milos.traceyoursteps.R;
+import com.ana.marija.milos.traceyoursteps.helpers.Notify;
 import com.ana.marija.milos.traceyoursteps.model.Settings;
 import com.ana.marija.milos.traceyoursteps.TraceYourSteps;
 import com.ana.marija.milos.traceyoursteps.model.TimerState;
@@ -31,6 +34,7 @@ public class TimerActivity extends Activity {
 
     protected Handler handler;
     protected UpdateTimer updateTimer;
+    private Notify notify;
 
 
    // protected boolean timerRunning;
@@ -69,6 +73,7 @@ public class TimerActivity extends Activity {
         if (vibrate == null) {
             Log.w(CLASS_NAME, "No vibration service exists.");
         }
+        notify = new Notify(this);
 
     }
 
@@ -140,15 +145,48 @@ public class TimerActivity extends Activity {
 
             counter.setText(timer.display());
 
-//            if (timerRunning && settings.isVibrateOn(activity)) {
-//                vibrateCheck();
-//            }
+            if (timer.isRunning()) {
+                if (settings.isVibrateOn(activity)) {
+                    vibrateCheck();
+                }
+                notifyCheck();
+            }
 
             if (handler != null) {
                 handler.postDelayed(this, UPDATE_EVERY);
             }
 
             // stayAwakeOrNot();
+        }
+
+        protected void notifyCheck() {
+            long seconds;
+            long minutes;
+            long hours;
+
+            Log.d(CLASS_NAME, "notifyCheck");
+
+            timer.elapsedTime();
+            seconds = timer.seconds();
+            minutes = timer.minutes();
+            hours = timer.hours();
+
+            if (minutes % 5 == 0 && seconds == 0 && seconds != lastSeconds) {
+                String title = getResources().getString(R.string.time_title);
+                String message = getResources().getString(
+                        R.string.time_running_message);
+
+                if (hours == 0 && minutes == 0) {
+                    message = getResources().getString(
+                            R.string.time_start_message);
+                }
+
+                message = String.format(message, hours, minutes);
+
+                notify.notify(title, message);
+            }
+
+            lastSeconds = seconds;
         }
 
         protected void vibrateCheck() {
@@ -232,6 +270,25 @@ public class TimerActivity extends Activity {
         stop.setEnabled(timer.isRunning());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(CLASS_NAME, "onCreateOptionsMenu");
+
+        getMenuInflater().inflate(R.menu.activity_settings, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                clickedSettings(null);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 
 }

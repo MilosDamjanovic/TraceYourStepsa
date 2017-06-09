@@ -8,4 +8,13 @@
     <string name="stop_button">Stop</string>
     <string name="settings_button">Settings</string>
     <string name="vibrate_checkbox">Vibrate</string>
+    <string name="vibrate_on">Kada je pokrenut, tajmer vibrira svakih 5 minuta, 15 minuta i na svakih sat vremena.</string>
+    <string name="vibrate_off">Tajmer ne vibrira.</string>
+    <string name="back_button">Nazad</string>
+    <string name="time_title">Trace your steps</string>
+    <string name="time_running_ticker">Samo napred!</string>
+    <string name="time_running_message">Trčali ste  %1$02d:%2$02d. Nastavite!</string>
+    <string name="time_start_ticker">On your way!</string>
+    <string name="time_start_message">Tek ste krenuli.</string>
+
 </resources>
