@@ -17,7 +17,7 @@ import com.ana.marija.milos.traceyoursteps.model.Settings;
 import com.ana.marija.milos.traceyoursteps.TraceYourSteps;
 
 public class SettingsActivity extends Activity {
-
+    
     private static String CLASS_NAME;
     Settings settings;
 
