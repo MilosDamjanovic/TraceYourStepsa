@@ -1,10 +1,7 @@
 package com.ana.marija.milos.traceyoursteps.aktivnosti;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,7 +14,7 @@ import com.ana.marija.milos.traceyoursteps.model.Settings;
 import com.ana.marija.milos.traceyoursteps.TraceYourSteps;
 
 public class SettingsActivity extends Activity {
-    
+
     private static String CLASS_NAME;
     Settings settings;
 
@@ -29,13 +26,13 @@ public class SettingsActivity extends Activity {
     private CheckBox vibrate;
 
     //kod u ovoj metodi se pokrece samo kad je apl pokrenuta na Honeycomb ili kasnijoj verziji
- //   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-   // private void setupActionBar() {
-  //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-  //          ActionBar actionBar = getActionBar();
-   //         actionBar.setDisplayHomeAsUpEnabled(true);
-  //      }
-  //  }
+    //   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    // private void setupActionBar() {
+    //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    //          ActionBar actionBar = getActionBar();
+    //         actionBar.setDisplayHomeAsUpEnabled(true);
+    //      }
+    //  }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +43,9 @@ public class SettingsActivity extends Activity {
 
         Settings settings = ((TraceYourSteps) getApplication()).getSettings();
         vibrate.setChecked(settings.isVibrateOn(this));
-     //   setupActionBar();
+        //   setupActionBar();
 
     }
-
 
 
     @Override
@@ -66,31 +62,33 @@ public class SettingsActivity extends Activity {
         Toaster toast = new Toaster(this);
 
         if (vibrate.isChecked()) {
-            toast.make( R.string.vibrate_on);
+            toast.make(R.string.vibrate_on);
         } else {
             toast.make(R.string.vibrate_off);
         }
     }
-//poziva se pritiskom na dugme Nazad
-    public void goBack(View view){
+
+    //poziva se pritiskom na dugme Nazad
+    public void goBack(View view) {
         finish();
     }
-//kreiranje namere za pokretanje Timer aktivnosti
-    private void gotoHome() {
-        Log.d(CLASS_NAME, "gotoHome");
+
+    //kreiranje namere za pokretanje Timer aktivnosti
+    private void goToHome() {
+        Log.d(CLASS_NAME, "goToHome");
 
         Intent timer = new Intent(this, TimerActivity.class);
         timer.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(timer);
     }
-    
+
     //detektovanje dodira na ikoni aplikacije u liniji akcije
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                gotoHome();
+                goToHome();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

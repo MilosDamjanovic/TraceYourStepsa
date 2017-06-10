@@ -28,8 +28,8 @@ public class TimerActivity extends Activity {
     protected TextView counter;
     protected Button start;
     protected Button stop;
-  //  protected long startedAt;
-   // protected long lastStopped;
+    //  protected long startedAt;
+    // protected long lastStopped;
     protected long lastSeconds;
 
     protected Handler handler;
@@ -37,14 +37,14 @@ public class TimerActivity extends Activity {
     private Notify notify;
 
 
-   // protected boolean timerRunning;
+    // protected boolean timerRunning;
     protected Vibrator vibrate;
     private TimerState timer;
 
     public TimerActivity() {
 
         CLASS_NAME = getClass().getName();
-        timer= new TimerState();
+        timer = new TimerState();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class TimerActivity extends Activity {
         Log.d(CLASS_NAME, "onStop");
         super.onStop();
 
-        Settings settings = ((TraceYourSteps) getApplication()).getSettings();
+        // Settings settings = ((TraceYourSteps) getApplication()).getSettings();
 
         if (timer.isRunning()) {
             handler.removeCallbacks(updateTimer);
@@ -144,12 +144,13 @@ public class TimerActivity extends Activity {
             Settings settings = ((TraceYourSteps) getApplication()).getSettings();
 
             counter.setText(timer.display());
+            notifyCheck();
 
             if (timer.isRunning()) {
                 if (settings.isVibrateOn(activity)) {
                     vibrateCheck();
                 }
-                notifyCheck();
+                // notifyCheck();
             }
 
             if (handler != null) {
@@ -229,7 +230,7 @@ public class TimerActivity extends Activity {
 
     public void clickedStart(View view) {
         Log.d(CLASS_NAME, "Kliknuto je dugme start");
-     //   counter.setText(timer.display());
+        //   counter.setText(timer.display());
         timer.start();
 
         enabledButtons();

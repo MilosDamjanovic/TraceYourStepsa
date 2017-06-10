@@ -1,7 +1,6 @@
 package com.ana.marija.milos.traceyoursteps;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ana.marija.milos.traceyoursteps.helpers.SQLiteHelper;

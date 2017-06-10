@@ -23,7 +23,7 @@ public class TimerState {
 
         timerRunning = false;
         startedAt = System.currentTimeMillis();
-      //  lastStopped = 0;
+        //  lastStopped = 0;
 
     }
 
@@ -47,50 +47,50 @@ public class TimerState {
     }
 
     public String display(){
-            String display;
+        String display;
 
-            long diff;
-            long seconds;
-            long minutes;
-            long hours;
+        long diff;
+        long seconds;
+        long minutes;
+        long hours;
 
-            Log.d(CLASS_NAME, "setTimeDisplay");
+        Log.d(CLASS_NAME, "setTimeDisplay");
         diff= elapsedTime();
 
 
 
-            // nema negativnog vremena!
-            if (diff < 0) {
-                diff = 0;
-            }
-
-            seconds = diff / 1000;
-            minutes = seconds / 60;
-            hours = minutes / 60;
-            seconds = seconds % 60;
-            minutes = minutes % 60;
-
-            display = String.format("%d", hours) + ":"
-                    + String.format("%02d", minutes) + ":"
-                    + String.format("%02d", seconds);
-
-            Log.i(CLASS_NAME, "Vreme je: " + display);
-
-            return display;
+        // nema negativnog vremena!
+        if (diff < 0) {
+            diff = 0;
         }
 
-        public long elapsedTime(){
-            long timeNow;
-            if (timerRunning) {
-                timeNow = System.currentTimeMillis();
-            } else {
-                timeNow = lastStopped;
-            }
+        seconds = diff / 1000;
+        minutes = seconds / 60;
+        hours = minutes / 60;
+        seconds = seconds % 60;
+        minutes = minutes % 60;
 
-            lastTime = timeNow - startedAt;
+        display = String.format("%d", hours) + ":"
+                + String.format("%02d", minutes) + ":"
+                + String.format("%02d", seconds);
 
-            return lastTime;
+        Log.i(CLASS_NAME, "Vreme je: " + display);
+
+        return display;
+    }
+
+    public long elapsedTime(){
+        long timeNow;
+        if (timerRunning) {
+            timeNow = System.currentTimeMillis();
+        } else {
+            timeNow = lastStopped;
         }
+
+        lastTime = timeNow - startedAt;
+
+        return lastTime;
+    }
 
 
     public long seconds() {
