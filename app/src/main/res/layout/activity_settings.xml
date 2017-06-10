@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#63bf89"
+    android:orientation="vertical"
     tools:context="com.ana.marija.milos.traceyoursteps.aktivnosti.SettingsActivity">
 
-   <CheckBox
-    android:id="@+id/vibrate_checkbox"
+    <CheckBox
+        android:id="@+id/vibrate_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:onClick="vibrateChanged"
-        android:text="@string/vibrate_checkbox"/>
+        android:onClick="vibrateChanged"
+        android:text="@string/vibrate_checkbox" />
 
-   //centrirano pri dnu dugme za povratak
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent" >
-      <Button
-          android:id="@+id/back_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentBottom="true"
-          android:layout_centerInParent="true"
-          android:onClick="goBack"
-          android:text="@string/back_button" />
+    <!--centrirano pri dnu dugme za povratak -->
 
-   </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:onClick="goBack"
+            android:text="@string/back_button" />
+
+    </RelativeLayout>
 
 </LinearLayout>

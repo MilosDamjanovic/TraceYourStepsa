@@ -1,7 +1,10 @@
 package com.ana.marija.milos.traceyoursteps;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.ana.marija.milos.traceyoursteps.helpers.SQLiteHelper;
 import com.ana.marija.milos.traceyoursteps.model.Settings;
 
 /**
@@ -10,9 +13,15 @@ import com.ana.marija.milos.traceyoursteps.model.Settings;
 
 public class TraceYourSteps extends Application {
     protected Settings settings;
+    //private SQLiteHelper helper;
+    private static String CLASS_NAME;
+
+    public TraceYourSteps() {
+        CLASS_NAME = getClass().getName();
+    }
 
     public Settings getSettings() {
-        if(settings==null){
+        if (settings == null) {
             settings = new Settings();
         }
         return settings;
@@ -20,5 +29,17 @@ public class TraceYourSteps extends Application {
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    @Override
+    public void onCreate() {
+        Log.d(CLASS_NAME, "onCreate");
+
+       SQLiteHelper helper = new SQLiteHelper(getApplicationContext());
+        super.onCreate();
+
+        helper.create();
+
+
     }
 }
