@@ -6,6 +6,4 @@
         android:orderInCategory="100"
         android:showAsAction="always|withText"
         android:title="@string/menu_settings"/>
-
-
 </menu>
